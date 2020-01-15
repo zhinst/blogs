@@ -1,0 +1,24 @@
+// Basic QAM signal generation
+//
+// Copyright (C) 2020 Zurich Instruments
+//
+// This software may be modified and distributed under the terms
+// of the MIT license. See the LICENSE file for details.
+
+//-----------------------------------------------------------------------------
+// Defining I and Q for QAM signaling
+  wave wBase = ones(8000);
+  const M = 4;
+  wave wI, wQ;
+  cvar i, q;
+  for (i = -(M-1); i < M; i += 2) {
+    for (q = -(M-1); q < M; q += 2) {
+      wI = join(wI, (i/M)*wBase);
+      wQ = join(wQ, (q/M)*wBase);
+    }
+  }
+//-----------------------------------------------------------------------------
+
+//----------------------------- QAM signal generation -------------------------
+playWave(1, wI, 1, wQ);
+//-----------------------------------------------------------------------------

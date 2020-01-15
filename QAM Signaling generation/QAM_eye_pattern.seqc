@@ -1,0 +1,51 @@
+// QAM Eye pattern generation
+//
+// Copyright (C) 2020 Zurich Instruments
+//
+// This software may be modified and distributed under the terms
+// of the MIT license. See the LICENSE file for details.
+
+//-----------------------------------------------------------------------------
+//----------------------------- Parameters and settings -----------------------
+  const nSampRate = AWG_RATE_75MHZ;             // sampling rate
+  const sampRate = (2.4e9)*pow(2,-nSampRate);   // sampling rate [Sa/s]
+  const amp = 0.1;                               // amplitude of signal
+  const T = 8e-6;                               // baud (symbol) time [s]
+  const nSamp = round(sampRate*T/8)*8;           // samples in a symbol
+  const m = 2;                         // number of bits per I or Q
+  const n = 2*m;                       // number of bits per symbol
+  const M = pow(2,m);         // number of signals in each dimension
+  setInt('awgs/0/time', nSampRate);
+//----------------------------- QAM waveform calculation ----------------------
+//wave wBase = amp*ones(nSamp);
+  wave wBase = gauss(nSamp, amp, nSamp/2, nSamp/5);
+  cvar i, q;
+  wave wI, wQ;
+  for (i = -(M-1); i < M; i += 2) {
+    for (q = -(M-1); q < M; q += 2) {
+      wI = join(wI, (i/M)*wBase);
+      wQ = join(wQ, (q/M)*wBase);
+    }
+  }
+//----------------------------- QAM signal generation -------------------------
+// XOR function
+  var XOR(var X, var Y){
+    return ~(X & Y) & (X | Y);
+  }
+  var S0 = 0, RN;
+  var S01 = 0b1, S02 = 0b0, S03 = 0b0, S04 = 0b0, S05 = 0b0;
+  var S06 = 0b0, S07 = 0b0, S08 = 0b0, S09 = 0b0; //S10 = 0b0;
+  var j;
+// Playback with PRBS
+  while (true) {
+    setTrigger(1);
+    for (j = 0; j < n; j++) {
+      S0 = XOR(S09,S05);
+      S09 = S08; S08 = S07; S07 = S06; S06 = S05;
+      S05 = S04; S04 = S03; S03 = S02; S02 = S01; S01 = S0;
+    }
+    RN = S01 + S02*pow(2,1) + S03*pow(2,2) + S04*pow(2,3);
+    setTrigger(0);
+    playWaveIndexed(1, wI, 1, wQ, RN*nSamp, nSamp);
+  }
+//-----------------------------------------------------------------------------
