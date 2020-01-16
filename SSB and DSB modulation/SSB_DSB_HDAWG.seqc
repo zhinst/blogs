@@ -1,0 +1,40 @@
+// SSB and DSB signal modulation for HDAWG
+//
+// Copyright (C) 2020 Zurich Instruments
+//
+// This software may be modified and distributed under the terms
+// of the MIT license. See the LICENSE file for details.
+
+// Parameters 
+const T = 10.0E-9;                              // Zero-crossing time 
+const amp = 0.5;                                // Amplitude 
+const NumSamp = 20000;                          // Number of samples 
+const PeakPos = round(NumSamp/2);               // Peak position 
+const F_samp = 2.4E9;                           // sampling frequency 
+const beta = NumSamp/(2*T*F_samp);              // Beta parameter of sinc 
+
+// Generating sinc pulse 
+wave w_sinc = amp*sinc(NumSamp, 1.0, PeakPos, beta);
+
+// Generating Hilbert transform of sinc 
+const slope = 2*amp*M_PI*beta*PeakPos/NumSamp;  // Coefficient 
+
+// Ramp signal 
+const rampCorrect = 0.5/NumSamp;
+wave w_ramp = ramp(NumSamp, -0.5, 0.5) + rampCorrect;
+
+// sinc with half the width 
+wave w_sinc_half = sinc(NumSamp, 1.0, PeakPos, beta/2);
+
+// Hilbert transform of sinc 
+wave w_hilb = slope*w_sinc_half*w_sinc_half*w_ramp;
+
+// Generating the SSB and DSB signals as well as Trigger 
+while (true) {
+    resetOscPhase();
+    setTrigger(1);
+    playWave(1, w_sinc, 1, w_hilb);
+    playWave(2, M_SQRT2*w_sinc);
+    waitWave();
+    setTrigger(0);
+}
