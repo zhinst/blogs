@@ -1,0 +1,38 @@
+// Frequency Response Measurement with Chirps and Leakage-Free FFT
+//
+// Copyright (C) 2020 Zurich Instruments
+//
+// This software may be modified and distributed under the terms
+// of the MIT license. See the LICENSE file for details.
+
+// Parameter definition
+const f_start = 20e6; // chirp start frequency (Hz)
+const f_stop = 30e6; // chirp stop frequency (Hz)
+const f_s = 900e6; // AWG ampling frequency (Sa/s)
+const t_s = 1/f_s; // AWG sampling period (s)
+const A = 1.0; // chirp amplitude (full scale)
+const n_s = pow(2,15); // chirp waveform length (samples) (condition 2)
+
+
+// The following calculation adjusts f_stop to ensure
+// the chirp waveform starts and ends at 0 (condition 1)
+const k = (f_stop-f_start)/(n_s*t_s); // Chirp rate: frequency span divided by chirp duration
+const P = round(n_s*t_s*(f_start + k*n_s*t_s/2));
+const f_stop_adjusted = 2*P/(n_s*t_s) - f_start; // New stop frequency (Hz)
+
+
+// We generate a chirp waveform using the "chirp" generation function
+// and store it in the wave called w_analog:
+wave w_analog = A*chirp(n_s, f_start/f_s, f_stop_adjusted/f_s, 0);
+// We generate a digital signal to trigger the Scope (condition 3).
+// The signal goes from 0 to 1 in the middle of the waveform.
+// We store it in the wave called w_marker:
+wave w_marker = join(marker(n_s/2, 0b00), marker(n_s/2, 0b01));
+// We combine analog and digital data into one waveform called w_chirp:
+wave w_chirp = w_analog + w_marker;
+
+
+// We play the waveform in an infinite "while" loop
+while (true){
+  playWave(w_chirp);
+}
