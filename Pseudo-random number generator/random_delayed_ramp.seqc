@@ -1,0 +1,41 @@
+// Runtime PRNG for AWG, random delayed ramp
+//
+// Copyright (C) 2020 Zurich Instruments
+//
+// This software may be modified and distributed under the terms
+// of the MIT license. See the LICENSE file for details.
+
+// ramp waveform and beginning/end waveforms
+wave w_r = ramp(2400,0,1);   //define ramp
+wave nu = zeros(256);        //define empty waveform used as offset that will be started with a delay
+wave w_1 = join(nu, w_r);    //combine ramp with zero waveform 
+wave w_2 = 0.5*ones(2400);   //define constant waveform
+wave w_f = join(w_1, w_2);   //define final waveform
+
+//define variables for the PRNG-Algorithm
+var u = 1;   
+var v = 13;
+var s = 17;
+var t = 7699;
+var w1 = 11;
+var w2 = 11;
+
+//Implementation of PRNG-Algorithm
+void prng() {
+    s = (t | (t<<7)) & ~(t & (t<<7));  
+    v = s;
+    u = v;
+    w1 = ((s<<5) | (v>>11)) & ~((s<<5) & (v>>11));
+    w2 = (w1 | s) & ~(w1 & s);
+    u = (w2 |v) & ~(w2 & v);
+    t = (s | u) & ~(s & u);    //final random number generated
+    u = t & 255;               //make a modulo 256 to pull out the correct range of random numbers.
+                               //this works only with 2^n-1
+}
+
+// Loop
+while(true) {
+  waitDigTrigger(2);
+  playWaveIndexed(w_f, u, 2656);
+  prng();
+}

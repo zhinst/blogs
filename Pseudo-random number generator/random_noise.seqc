@@ -1,0 +1,36 @@
+// Runtime PRNG for AWG, random noise generator
+//
+// Copyright (C) 2020 Zurich Instruments
+//
+// This software may be modified and distributed under the terms
+// of the MIT license. See the LICENSE file for details.
+
+// base random noise waveform
+wave rand_1 = randomGauss(256*2048, 1, 0, 0.2);
+
+//define variables for the PRNG-Algorithm
+var u = 1;   
+var v = 13;
+var s = 17;
+var t = 7699;
+var w1 = 11;
+var w2 = 11;
+
+//Implementation of PRNG-Algorithm
+void prng() {
+    s = (t | (t<<7)) & ~(t & (t<<7));  
+    v = s;
+    u = v;
+    w1 = ((s<<5) | (v>>11)) & ~((s<<5) & (v>>11));
+    w2 = (w1 | s) & ~(w1 & s);
+    u = (w2 |v) & ~(w2 & v);
+    t = (s | u) & ~(s & u);    //final random number generated
+    u = t & 255;               //make a modulo 256 to pull out the correct range of random numbers.
+                               //this works only with 2^n-1
+}
+
+// Loop
+while(true) {
+    playWaveIndexed(rand_1, u << 11, 2048);
+    prng();
+}
