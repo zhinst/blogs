@@ -4,4 +4,4 @@ The contents of this folder belong to the blog post [How to Generate QAM Signali
 
 The file [QAM_signal_generation.seqc](QAM_signal_generation.seqc) contains a basic example of QAM signal generation.
 
-The file [QAM_eye_pattern.seqc](QAM_signal_generation.seqc) generates a random BPSK pattern for eye and constellation visualization.
+The file [QAM_eye_pattern.seqc](QAM_eye_pattern.seqc) generates a random BPSK pattern for eye and constellation visualization.
