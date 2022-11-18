@@ -14,7 +14,7 @@ jupyter:
 
 # Waveform Precision in Picoseconds: Subsampling Techniques with Zurich Instruments QCCS
 
-This script implement a simulated sequence sequence with sub-sample precision of the wait time, as described in the relative blog post
+This script implements an example sequence that sets the wait time between two pulses to sub-sample precision, as described in the blog post.
 
 Copyright (C) 2022 Zurich Instruments
 
@@ -81,7 +81,7 @@ my_session.connect(do_emulation=False) # Note: Emulation is not supported when u
 ### Accessing Device Nodes
 
 
-We'll assing the following to access the nodes of the toolkit. Within the LabOne Q Session, each device that has been connected to can be accessed using its device ID.
+We make the following assignments and definitions to access the nodes using the Toolkit from within LabOne Q. In a LabOne Q Session, each device that has been connected to can be accessed using its device ID.
 
 ```python
 instrument_serial = my_setup.instrument_by_uid('device').address
@@ -109,7 +109,7 @@ elif device_type == 'hd':
 ### Reset to a Default State
 
 
-If you'd like to reset your device, turn off all ouputs, and revert to the default state, you can uncomment the reset command below. Note, while the HDAWG supports this functionality, some other Zurich Instruments products do not.
+If you'd like to reset your device, turn off all ouputs, and revert to the default state, you can uncomment the reset command below. Note that while the HDAWG supports this functionality, some other Zurich Instruments products do not.
 
 ```python
 # Reset the device to its factory settings before beginning tutorial
@@ -119,7 +119,7 @@ If you'd like to reset your device, turn off all ouputs, and revert to the defau
 ## Apply Instrument Settings
 
 
-We use a transactional set to simultaneously push all our desired settings to the HDAWG:
+We use a transactional set to simultaneously push all of our desired settings to the HDAWG:
 
 ```python
 # use transactional set to configure multiple settings
