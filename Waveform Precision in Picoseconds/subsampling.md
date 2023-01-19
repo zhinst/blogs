@@ -99,8 +99,8 @@ else:
 
 #Fetch the AWG and channel nodes
 if device_type == 'sg':
-    awg = sgchannel.awg
     sgchannel = device.sgchannels[AWG_CORE_INDEX]
+    awg = sgchannel.awg
 elif device_type == 'hd':
     awg = device.awgs[AWG_CORE_INDEX]
     out_ch = [2*AWG_CORE_INDEX, 2*AWG_CORE_INDEX+1]
