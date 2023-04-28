@@ -1,6 +1,6 @@
-## QAM Signaling generation
+## How to Generate QAM Signaling with the HDAWG
 
-The contents of this folder belong to the blog post [How to Generate QAM Signaling with the HDAWG Arbitrary Waveform Generator](https://blogs.zhinst.com/mehdia/how-to-generate-qam-signaling-with-the-hdawg-arbitrary-waveform-generator/).
+The contents of this folder belong to the blog post [How to Generate QAM Signaling with the HDAWG Arbitrary Waveform Generator](https://www.zhinst.com/blogs/how-generate-qam-signaling-hdawg-arbitrary-waveform-generator).
 
 The file [QAM_signal_generation.seqc](QAM_signal_generation.seqc) contains a basic example of QAM signal generation.
 

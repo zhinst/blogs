@@ -1,6 +1,6 @@
-## SSB and DSB signal modulation
+## Generation of wideband SSB and DSB modulations using AWG
 
-The contents of this folder belong to the blog post [Generation of Single-Sideband Modulation by Arbitrary Waveform Generators](https://blogs.zhinst.com/mehdia/generation-of-single-sideband-modulation-by-arbitrary-waveform-generators/).
+The contents of this folder belong to the blog post [Generation of Single-Sideband Modulation by Arbitrary Waveform Generators](https://www.zhinst.com/node/1945).
 
 The file [SSB_DSB_UHFLI.seqc](SSB_DSB_UHFLI.seqc) contains an example SSB and DSB generated signals for the UHFLI instrument.
 
