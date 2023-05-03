@@ -1,9 +1,14 @@
+% Kramers–Kronig Test Applied to Impedance Measurements of Electrical Circuits 
+%
+% Copyright (C) 2017 Zurich Instruments 
+% 
+% This software may be modified and distributed under the terms 
+% of the MIT license. See the LICENSE file for details.
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear; close all; clc;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 file_name = 'Impedance_Measurement_MFIA.csv';
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Reading measured data from file
 % file_name = 'Impedance.txt';
@@ -18,7 +23,6 @@ realZ = data(:,2)';
 imagZ = data(:,3)';
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 freqExt = freq;
-
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure('Name','Impedance Spectroscopy','NumberTitle','on');
@@ -46,10 +50,8 @@ xlim([0.01 100e3])
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 %%% Removing the series resistor (It improves the precision in high frequencies)
 realZ_RemovedSeries = realZ; %- realZ(end);
-
 
 %%% Calculating the imaginary part using the KK relations. 
 NumFreq = length(freqExt);
@@ -84,12 +86,9 @@ set(h,'Box','on','Color','w','Location','NorthEast','FontSize',12,'FontWeight','
 
 xlim([1 max(freq)])
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 %%% Calculating the real part using the KK relations.  
-
 imagZ_RemovedSeries = imagZ;
 NumFreq = length(freqExt);
 FreqKK = freq(1+2:NumFreq-2);
@@ -98,17 +97,6 @@ for nn = 3:NumFreq-2
     integrand = imagZ_RemovedSeries.*freqExt./(freqExt.^2 - freqExt(nn)^2);
     KKrealZ(nn - 2) = -(2/pi)*(trapz(freqExt(1:nn-1),integrand(1:nn-1)) + trapz(freqExt(nn+1:NumFreq),integrand(nn+1:NumFreq)));
 end
-
-
-% imagZ_RemovedSeries = imagZ;
-% NumFreq = length(freqExt);
-% FreqKK = freq(1:NumFreq);
-% KKrealZ = zeros(1,length(FreqKK));
-% for nn = 3:NumFreq-2
-%     integrand = imagZ_RemovedSeries.*freqExt./(freqExt.^2 - freqExt(nn)^2);
-%     KKrealZ(nn) = -(2/pi)*(trapz(freqExt(1:nn-1),integrand(1:nn-1)) + trapz(freqExt(nn+1:NumFreq),integrand(nn+1:NumFreq)));
-% end
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure('Name','Impedance Spectroscopy','NumberTitle','on');
