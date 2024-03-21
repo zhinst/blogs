@@ -51,7 +51,7 @@ xlim([0.01 100e3])
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Removing the series resistor (It improves the precision in high frequencies)
-realZ_RemovedSeries = realZ; %- realZ(end);
+realZ_RemovedSeries = realZ - realZ(end);
 
 %%% Calculating the imaginary part using the KK relations. 
 NumFreq = length(freqExt);
